@@ -3,7 +3,9 @@ var passportJWT = require('passport-jwt');
 var users = require('./users');
 var cfg = require('./config');
 var ExtractJwt = passportJWT.ExtractJwt;  
-var Strategy = passportJWT.Strategy;
+var JwtStrategy = passportJWT.Strategy;
+var LocalStrategy = require('passport-local').Strategy;
+
 var _ = require('lodash');
 
 var params ={
@@ -11,7 +13,7 @@ var params ={
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 };
 
-var strategy = new Strategy(params, (payload,done)=>{
+var loginStrategy = new JwtStrategy(params, (payload,done)=>{
     let user = _.find(users,{id:payload.id});
     if(user){
         return done(null, user);
@@ -20,7 +22,9 @@ var strategy = new Strategy(params, (payload,done)=>{
     }
 });
 
-passport.use(strategy);
+
+
+passport.use('login',loginStrategy);
 
 
 module.exports = function() {
@@ -29,7 +33,7 @@ module.exports = function() {
             return passport.initialize();
         },
         authenticate: function(){
-            return passport.authenticate('jwt', cfg.jwtSession)
+            return passport.authenticate('login', cfg.jwtSession)
         }
     }
 }

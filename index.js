@@ -15,7 +15,7 @@ app.get('/', (req,res)=>{
     });
 });
 
-app.get('/user', auth.authenticate(), (req, res)=>{
+app.get('/user', auth.authenticate('login'), (req, res)=>{
     return res.json(req.user);
 });
 
