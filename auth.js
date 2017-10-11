@@ -25,23 +25,37 @@ var loginStrategy = new JwtStrategy(params, (payload,done)=>{
 var signupStrategy = new LocalStrategy({
     usernameField : 'email',
     passwordField : 'password',
-}, function(req, email, password, done){
-    
+}, function(email, password, done){
+    let user = _.find(users, {email:email});
+    if(user){
+        return done(null, false, {
+            error_message: 'This email has been used.'
+        });
+    }
+    let newUser = {
+        email,
+        password
+    };
+    users.push(newUser);
+    return done(null, newUser);
 });
 
 
 
 
 passport.use('login',loginStrategy);
-
+passport.use('signup',signupStrategy);
 
 module.exports = function() {
     return {
         initialize:function(){
             return passport.initialize();
         },
-        authenticate: function(){
+        login: function(){
             return passport.authenticate('login', cfg.jwtSession)
+        },
+        signup: function(){
+            return passport.authenticate('signup', cfg.jwtSession);
         }
     }
 }

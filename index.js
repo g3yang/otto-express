@@ -15,7 +15,7 @@ app.get('/', (req,res)=>{
     });
 });
 
-app.get('/user', auth.authenticate('login'), (req, res)=>{
+app.get('/user', auth.login(), (req, res)=>{
     return res.json(req.user);
 });
 
@@ -37,6 +37,10 @@ app.post('/token', (req,res)=>{
     } else { 
         res.sendStatus(401);
     }
+});
+
+app.post('/signup', auth.signup(),(req, res)=>{
+    console.log(req);
 });
 
 
