@@ -22,6 +22,14 @@ var loginStrategy = new JwtStrategy(params, (payload,done)=>{
     }
 });
 
+var signupStrategy = new LocalStrategy({
+    usernameField : 'email',
+    passwordField : 'password',
+}, function(req, email, password, done){
+    
+});
+
+
 
 
 passport.use('login',loginStrategy);
