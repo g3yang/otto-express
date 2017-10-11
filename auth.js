@@ -4,17 +4,17 @@ var users = require('./users');
 var cfg = require('./config');
 var ExtractJwt = passportJWT.ExtractJwt;  
 var Strategy = passportJWT.Strategy;
+var _ = require('lodash');
+
 var params ={
     secretOrKey: cfg.jwtSecret,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 };
 
 var strategy = new Strategy(params, (payload,done)=>{
-    var user = users[payload.id];
+    let user = _.find(users,{id:payload.id});
     if(user){
-        return done(null,{
-            id: user.id
-        });
+        return done(null, user);
     } else {
         return done(new Error('User not found'),null);
     }

@@ -4,14 +4,19 @@ var auth = require('./auth')();
 var app = express();
 var config = require('./config');
 var jwt = require('jwt-simple');
+var users = require('./users');
 app.use(auth.initialize());
 
 
-app.use(bodyParser.json());
+app.use(bodyParser());
 app.get('/', (req,res)=>{
     res.json({
         status:'My API is alive'
     });
+});
+
+app.get('/user', auth.authenticate(), (req, res)=>{
+    return res.json(req.user);
 });
 
 app.post('/token', (req,res)=>{
