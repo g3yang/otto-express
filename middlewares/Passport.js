@@ -1,12 +1,18 @@
 var passport = require('passport');
 var passportJWT = require('passport-jwt');
-var users = require('../models/Users');
+var User = require('../models/User');
 var cfg = require('../config');
 var ExtractJwt = passportJWT.ExtractJwt;  
 var JwtStrategy = passportJWT.Strategy;
 var LocalStrategy = require('passport-local').Strategy;
 
 var _ = require('lodash');
+
+var users =[
+    {   email:'john@mail.com',
+        password: 'john123'
+    }
+];
 
 var params ={
     secretOrKey: cfg.jwtSecret,

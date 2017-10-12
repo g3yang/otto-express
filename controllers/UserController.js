@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('../middlewares/Passport');
-var users = require('../models/Users');
+var User = require('../models/User');
 var _ = require('lodash');
 
 router.get('/user', passport.login(), (req,res)=>{
@@ -9,21 +9,19 @@ router.get('/user', passport.login(), (req,res)=>{
 });
 
 router.post('/users', (req, res)=>{
-    let {email, password, id} = req.body;
+    let {email, password} = req.body;
 
-    let user = _.find(users, {email:email});
-    if(user){
-        return res.send(400, {
-            error_message: 'This email has been used.'
-        });
-    }
-    let newUser = {
+    let userData = {
         email,
-        password,
-        id
+        password
     };
-    users.push(newUser);
-    return res.json(newUser);
+    
+    User.create(userData, (error, user)=>{
+        if(error){
+            return res.status(400).send(error.message);
+        }
+        return res.json(user);
+    });
 });
 
 

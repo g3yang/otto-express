@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jwt-simple');
-var users = require('../models/Users');
+var User = require('../models/User');
 var config = require('../config');
+var users = [];
 
 router.post('/token', (req,res)=>{
     let email = req.body.email;
