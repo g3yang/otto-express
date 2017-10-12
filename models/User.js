@@ -33,7 +33,7 @@ UserSchema.statics.authenticate = function(email, password, callback){
     });
 };
 
-UserSchema.pre('save', (next)=>{
+UserSchema.pre('save', function(next) {
     var user = this;
     bcrypt.hash(user.password, 10, (err, hash)=>{
         if(err){
