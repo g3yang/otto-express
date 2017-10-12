@@ -6,23 +6,26 @@ var config = require('../config');
 var users = [];
 
 router.post('/token', (req,res)=>{
-    let email = req.body.email;
-    let password = req.body.password;
+    let {email, password} = req.body;
     if(!(email && password)){
         return res.sendStatus(401);
     }
 
-    let user = users.find(u=>u.email == email 
-            && u.password == password);
-    if (user){
+    User.authenticate(email, password, (err, user)=>{
+        if(err || !user){
+            return res.status(400).json({
+                error_message: 'Failed Authentication'
+            });
+        }
+
         let payload = {
             id: user.id
         };
+        
         let token = jwt.encode(payload, config.jwtSecret);
         res.json({token});
-    } else { 
-        res.sendStatus(401);
-    }
+    });
+
 });
 
 router.post('/signup', (req, res)=>{

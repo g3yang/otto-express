@@ -15,12 +15,13 @@ router.post('/users', (req, res)=>{
         email,
         password
     };
-    
     User.create(userData, (error, user)=>{
         if(error){
             return res.status(400).send(error.message);
         }
-        return res.json(user);
+        return res.json({
+            id: user.id
+        });
     });
 });
 

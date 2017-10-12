@@ -5,6 +5,7 @@ var cfg = require('../config');
 var ExtractJwt = passportJWT.ExtractJwt;  
 var JwtStrategy = passportJWT.Strategy;
 var LocalStrategy = require('passport-local').Strategy;
+var mongoose = require('mongoose');
 
 var _ = require('lodash');
 
@@ -20,37 +21,20 @@ var params ={
 };
 
 var loginStrategy = new JwtStrategy(params, (payload,done)=>{
-    let user = _.find(users,{id:payload.id});
-    if(user){
-        return done(null, user);
-    } else {
-        return done(new Error('User not found'),null);
-    }
+    let userId = new mongoose.Types.ObjectId(payload.id);
+    User.findOne({_id: userId}).exec(function(err, user){
+        if(err){
+            return done(new Error('Error in finding user'));
+        }
+        if(!user){
+            return done(new Error('Can not find this user'));
+        }else{
+            return done(null, user);
+        }
+    });
 });
-
-var signupStrategy = new LocalStrategy({
-    usernameField : 'email',
-    passwordField : 'password',
-}, function(email, password, done){
-    let user = _.find(users, {email:email});
-    if(user){
-        return done(null, false, {
-            error_message: 'This email has been used.'
-        });
-    }
-    let newUser = {
-        email,
-        password
-    };
-    users.push(newUser);
-    return done(null, newUser);
-});
-
-
-
 
 passport.use('login',loginStrategy);
-passport.use('signup',signupStrategy);
 
 module.exports = {
     initialize:function(){
@@ -58,8 +42,5 @@ module.exports = {
     },
     login: function(){
         return passport.authenticate('login', cfg.jwtSession)
-    },
-    signup: function(){
-        return passport.authenticate('signup', cfg.jwtSession);
     }
 }
