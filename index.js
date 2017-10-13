@@ -16,9 +16,11 @@ app.use(authController);
 app.use(userController);
 app.use(todosController);
 app.get('/', (req,res)=>{
-    res.json({
-        status:'My API is alive'
-    });
+    setTimeout(()=>{
+        res.json({
+            status:'My API is alive'
+        });
+    },10000);
 });
 
 app.listen(3000, ()=>{
