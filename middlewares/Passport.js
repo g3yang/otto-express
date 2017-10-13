@@ -40,7 +40,7 @@ module.exports = {
     initialize:function(){
         return passport.initialize();
     },
-    login: function(){
+    authenticate: function(){
         return passport.authenticate('login', cfg.jwtSession)
     }
 }

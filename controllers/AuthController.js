@@ -21,16 +21,11 @@ router.post('/token', (req,res)=>{
         let payload = {
             id: user.id
         };
-        
+
         let token = jwt.encode(payload, config.jwtSecret);
         res.json({token});
     });
 
 });
-
-router.post('/signup', (req, res)=>{
-    console.log(req);
-});
-
 
 module.exports = router;

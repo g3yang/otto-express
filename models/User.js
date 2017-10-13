@@ -10,9 +10,12 @@ var UserSchema = new mongoose.Schema({
     },
     password:{
         type: String,
-        required: true,
-        select: false
-    }
+        required: true
+    },
+    todos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Todo'
+    }]
 });
 
 UserSchema.statics.authenticate = function(email, password, callback){
@@ -34,15 +37,9 @@ UserSchema.statics.authenticate = function(email, password, callback){
     });
 };
 
-UserSchema.pre('save', function(next) {
-    var user = this;
-    bcrypt.hash(user.password, 10, (err, hash)=>{
-        if(err){
-            return next(err);
-        }
-        user.password = hash;
-        return next();
-    })
-});
+UserSchema.statics.generateHash = function(password){
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+};
+
 var User = mongoose.model('User', UserSchema);
 module.exports = User; 

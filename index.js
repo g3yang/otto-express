@@ -4,6 +4,7 @@ var app = express();
 var config = require('./config');
 var authController = require('./controllers/AuthController');
 var userController = require('./controllers/UserController');
+var todosController = require('./controllers/TodosController');
 var passport = require('./middlewares/Passport');
 var mongoose = require('mongoose');
 
@@ -13,6 +14,7 @@ app.use(bodyParser());
 app.use(passport.initialize());
 app.use(authController);
 app.use(userController);
+app.use(todosController);
 app.get('/', (req,res)=>{
     res.json({
         status:'My API is alive'
