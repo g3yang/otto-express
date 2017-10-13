@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
+var Todo = require('./Todo');
 
 var UserSchema = new mongoose.Schema({
     email:{
@@ -40,6 +41,12 @@ UserSchema.statics.authenticate = function(email, password, callback){
 UserSchema.statics.generateHash = function(password){
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 };
+
+UserSchema.pre('remove', function(next){
+    Todo.remove({user: this._id}, (err)=>{
+        next(err, null);
+    })
+});
 
 var User = mongoose.model('User', UserSchema);
 module.exports = User; 

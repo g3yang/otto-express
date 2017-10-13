@@ -8,6 +8,16 @@ router.get('/user', passport.authenticate(), (req,res)=>{
     res.json(req.user);
 });
 
+router.delete('/user', passport.authenticate(), (req, res)=>{
+    let user = req.user;
+    user.remove(function(err){
+        if(err){
+            return res.status(400).send(err);
+        }
+        return res.send();
+    });
+});
+
 router.post('/users', (req, res)=>{
     let {email, password} = req.body;
 
