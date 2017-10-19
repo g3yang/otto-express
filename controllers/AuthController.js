@@ -8,7 +8,7 @@ var users = [];
 router.post('/token', (req,res)=>{
     let {email, password} = req.body;
     if(!(email && password)){
-        return res.sendStatus(401);
+        return res.sendStatus(400);
     }
 
     User.authenticate(email, password, (err, user)=>{
