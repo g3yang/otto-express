@@ -17,5 +17,20 @@ var TodoSchema = new mongoose.Schema({
     }
 });
 
+TodoSchema.pre('remove', function(next){
+    var User = require('./User');
+      
+    User.update({
+        _id: this.user
+    },{
+        $pull:{
+            todos: this._id
+        }
+    },(err, val)=>{
+        next(err, val)
+    });
+ 
+});
+
 var Todo = mongoose.model('Todo', TodoSchema);
 module.exports = Todo; 
