@@ -25,6 +25,8 @@ router.post('/users', (req, res)=>{
         email,
         password: User.generateHash(password)
     };
+
+
     
     User.create(userData, (error, user)=>{
         if(error){

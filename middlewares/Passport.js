@@ -9,11 +9,6 @@ var mongoose = require('mongoose');
 
 var _ = require('lodash');
 
-var users =[
-    {   email:'john@mail.com',
-        password: 'john123'
-    }
-];
 
 var params ={
     secretOrKey: cfg.jwtSecret,

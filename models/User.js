@@ -16,7 +16,9 @@ var UserSchema = new mongoose.Schema({
     todos: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Todo'
-    }]
+    }],
+},{
+    usePushEach: true
 });
 
 UserSchema.statics.authenticate = function(email, password, callback){
