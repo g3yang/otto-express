@@ -15,12 +15,8 @@ router.get('/todos', passport.authenticate(), (req,res)=>{
 
 
 router.delete('/todos/:id', passport.authenticate(), (req, res)=>{
-    let id = req.param.id;
-    let query = {
-        user: req.user.id,
-        id: id
-    };
-    Todo.findOne(query, (err, todo)=>{
+    let id = req.params.id;
+    Todo.findById(id, (err, todo)=>{
         if(err){
             return res.status(400).send(err);
         }
@@ -51,10 +47,11 @@ router.get('/todos/:id', passport.authenticate(), (req, res)=>{
 
 
 router.post('/todos', passport.authenticate(), (req,res)=>{
-    let description = req.body.description;
+    const {description, title} = req.body
     let user = req.user;
     let newTodo = {
         description: description,
+        title: title,
         user: user._id
     };
 
@@ -70,6 +67,22 @@ router.post('/todos', passport.authenticate(), (req,res)=>{
             }
             return res.json(todo);    
         });
+    });
+});
+
+router.put('/todos/:id',passport.authenticate(),(req, res)=>{
+    const {description, title} = req.body;
+    const id = req.params.id;
+    Todo.findByIdAndUpdate(id,{
+        title, 
+        description
+    }, {new:true},
+    (err, todo)=>{
+        if(err){
+            return res.status(400).send(err);
+        }
+
+        return res.json(todo);
     });
 });
 
